@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pharmacies.Data;
-using Pharmacies.Web.Models;
+using Pharmacies.Models;
 using Pharmacies.Web.Services;
 
 namespace Pharmacies.Web
@@ -29,7 +25,7 @@ namespace Pharmacies.Web
             services.AddDbContext<PharmaciesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<PharmaciesUser, IdentityRole>()
                 .AddEntityFrameworkStores<PharmaciesDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -59,6 +55,10 @@ namespace Pharmacies.Web
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+            name: "areas",
+            template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

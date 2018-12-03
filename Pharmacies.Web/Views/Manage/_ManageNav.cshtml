@@ -1,5 +1,6 @@
 ﻿@using Pharmacies.Web.Views.Manage
-@inject SignInManager<ApplicationUser> SignInManager
+@using Pharmacies.Models
+@inject SignInManager<PharmaciesUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
