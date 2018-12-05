@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Pharmacies.Data;
 using Pharmacies.Models;
 using Pharmacies.Web.Services;
+using Pharmacies.Web.Utilities;
+using System;
 
 namespace Pharmacies.Web
 {
@@ -22,10 +25,31 @@ namespace Pharmacies.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = false;
+            });
+
             services.AddDbContext<PharmaciesDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<PharmaciesUser, IdentityRole>()
+            services.AddIdentity<PharmaciesUser, IdentityRole>(identityOption =>
+            {
+                identityOption.Password.RequiredLength = 3;
+                identityOption.Password.RequireDigit = false;
+                identityOption.Password.RequireUppercase = false;
+                identityOption.Password.RequireLowercase = false;
+                identityOption.Password.RequiredUniqueChars = 0;
+                identityOption.Password.RequireNonAlphanumeric = false;
+            })
+                .AddDefaultUI()
                 .AddEntityFrameworkStores<PharmaciesDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -36,7 +60,7 @@ namespace Pharmacies.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider, PharmaciesDbContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -49,10 +73,15 @@ namespace Pharmacies.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            Seeder.SeedRoleAsync(provider).Wait();
+
+            Seeder.SeedCities(dbContext).Wait();
+
             app.UseStaticFiles();
 
-            app.UseAuthentication();
-
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

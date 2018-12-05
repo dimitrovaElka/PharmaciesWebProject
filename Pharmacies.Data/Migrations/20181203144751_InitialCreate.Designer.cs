@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pharmacies.Data;
 
-namespace Pharmacies.Web.Data.Migrations
+namespace Pharmacies.Data.Migrations
 {
     [DbContext(typeof(PharmaciesDbContext))]
-    [Migration("20181203084202_CreateModels")]
-    partial class CreateModels
+    [Migration("20181203144751_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

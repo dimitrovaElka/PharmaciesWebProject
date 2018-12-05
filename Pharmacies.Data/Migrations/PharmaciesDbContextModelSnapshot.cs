@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pharmacies.Data;
 
-namespace Pharmacies.Web.Data.Migrations
+namespace Pharmacies.Data.Migrations
 {
     [DbContext(typeof(PharmaciesDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    partial class PharmaciesDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
