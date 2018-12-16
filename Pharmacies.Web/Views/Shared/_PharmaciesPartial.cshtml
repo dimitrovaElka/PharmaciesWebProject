@@ -1,0 +1,53 @@
+@*@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Common*@
+
+@model Pharmacies.Web.Models.PharmaciesViewModels.AllPharmaciesViewModel
+
+@{
+    ViewData["Title"] = "All Pharmacies";
+}
+<h4 class="text-center mt-2" lang="bg">Аптеки с лиценз</h4>
+<hr class="hr-2" />
+
+<table class="table table-striped .thead-dark">
+    <thead lang="bg">
+        <tr>
+            <th>#</th>
+            <th>Аптека име</th>
+            <th>Населено място</th>
+            <th>адрес</th>
+            <th>управител на аптеката</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ var i = 1;}
+        @foreach (var item in Model.AllPharmacies.ToList())
+        {
+            <tr>
+                <td>@(i++)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Menager)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*<nav class="pagination justify-content-center">
+    @Html.PagedListPager((IPagedList)Model, page => Url.Action("All", new { page = page }),
+    new PagedListRenderOptions
+    {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" }
+    })
+</nav>*@

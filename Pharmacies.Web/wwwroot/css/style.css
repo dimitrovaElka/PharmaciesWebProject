@@ -1,26 +1,67 @@
-hr {
-    height: 2px;
-    border-color: green;
+.app {
+    width: 100%;
+    height: 100%;
 }
 
-nav {
-    background-color: green;
+a {
+    color: black;
 }
 
-.home-body {
-    background-color: green;
-    padding: 40px;
+.half-width {
+    width: 50%;
 }
 
-.text-orange {
-    color: orange;
+textarea {
+    resize: none;
 }
 
-.text-green {
-    color: green;
+/*.Eventures-bg-color {
+    background-color: #DC143C;
+    color: #F8F8FF;
+}*/
+
+.Eventures-bg-color {
+    background-color: #AFEEEE;
+    color: dimgrey;
 }
 
-.btn-green {
-    background-color: green;
-    color: white;
+.back-ground-yellow {
+    background-color: lemonchiffon;
 }
+
+.nav-item {
+    font-family: Courier New, Courier, monospace
+}
+
+.nav-link-dark {
+    color: cornflowerblue;
+}
+/*.nav-link-dark {
+    color: #C0C0C0
+}*/
+
+.hr-2 {
+    height: 3px;
+    background-color: #AFEEEE;
+}
+
+.hr-1 {
+    height: 1px;
+}
+
+.table-hover>tbody>tr:hover {
+    background-color: #AFEEEE;
+    color: black;
+}
+
+footer {
+    position: fixed;
+    color: dimgrey;
+    bottom: 0;
+    border: 0;
+    width: 100%;
+}
+
+/*.product {*/
+	/*word-wrap: break-word;*/
+/*}*/

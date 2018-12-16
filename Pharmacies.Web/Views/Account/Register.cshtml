@@ -27,14 +27,14 @@
             <div class="d-flex justify-content-center">
                 <label asp-for="Password"></label>
             </div>
-            <input asp-for="Password" type="password" class="form-control" placeholder="Password...">
+            <input asp-for="Password" type="password" class="form-control" placeholder="Парола...">
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <div class="col">
             <div class="d-flex justify-content-center">
-                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <label asp-for="ConfirmPassword">Потвърдете паролата</label>
             </div>
-            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password...">
+            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Парола...">
         </div>
     </div>
     <hr class="hr-2" />
@@ -54,7 +54,7 @@
     </div>
     <div class="form-group">
         <label class="text-center" asp-for="Uin">УИН</label>
-        <input asp-for="Uin" class="form-control" placeholder="Universal Citizen Number ..." name="UCN">
+        <input asp-for="Uin" class="form-control" placeholder="УИН, ако сте фармацевт ..." name="UCN">
     </div>
     <hr class="hr-2" />
     <div class="button-holder d-flex justify-content-center">

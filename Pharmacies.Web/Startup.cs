@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pharmacies.Data;
 using Pharmacies.Models;
 using Pharmacies.Web.Services;
+using Pharmacies.Web.Services.Contracts;
 using Pharmacies.Web.Utilities;
 using System;
 
@@ -55,6 +56,7 @@ namespace Pharmacies.Web
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IPharmaciesService, PharmaciesService>();
 
             services.AddMvc();
         }

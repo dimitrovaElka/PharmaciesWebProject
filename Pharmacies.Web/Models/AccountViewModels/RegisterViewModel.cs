@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Pharmacies.Web.Models.AccountViewModels
 {
@@ -12,7 +8,6 @@ namespace Pharmacies.Web.Models.AccountViewModels
         [Display(Name = "Username")]
         public string Username { get; set; }
 
-        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -36,7 +31,6 @@ namespace Pharmacies.Web.Models.AccountViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
         [Display(Name = "UIN")]
         public string Uin { get; set; }
     }

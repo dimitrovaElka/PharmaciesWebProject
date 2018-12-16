@@ -22,8 +22,6 @@ namespace Pharmacies.Data
 
         public DbSet<DrugMedicament> DrugMedicaments { get; set; }
 
-        public DbSet<Pharmacist> Pharmacists { get; set; }
-
         public DbSet<PurchasedAndSoldDrugMedicament> PurchasedAndSoldDrugs { get; set; }
 
         public DbSet<ReportingPeriod> ReportingPeriods { get; set; }

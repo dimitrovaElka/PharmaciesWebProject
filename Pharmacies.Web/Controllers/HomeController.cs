@@ -5,14 +5,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Pharmacies.Web.Models;
+using Pharmacies.Web.Models.PharmaciesViewModels;
+using Pharmacies.Web.Services.Contracts;
 
 namespace Pharmacies.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly IPharmaciesService pharmaciesService;
+
+        public HomeController(IPharmaciesService pharmaciesService)
         {
-            return View();
+            this.pharmaciesService = pharmaciesService;
+        }
+
+        public IActionResult Index(AllPharmaciesViewModel model)
+        {
+            var pharmacies = pharmaciesService.All();
+            model = new AllPharmaciesViewModel { AllPharmacies = pharmacies.ToList() };
+
+            return View(model);
         }
 
         public IActionResult About()

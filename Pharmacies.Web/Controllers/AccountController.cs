@@ -23,7 +23,7 @@ namespace Pharmacies.Web.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<PharmaciesUser> _userManager;
-        private readonly SignInManager<PharmaciesUser> _signInManager;
+        private readonly SignInManager<PharmaciesUser> signIn;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
 
@@ -34,7 +34,7 @@ namespace Pharmacies.Web.Controllers
             ILogger<AccountController> logger)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
+            signIn = signInManager;
             _emailSender = emailSender;
             _logger = logger;
         }
@@ -63,26 +63,25 @@ namespace Pharmacies.Web.Controllers
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await signIn.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Home");
                 }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToAction(nameof(Lockout));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
-                }
+                //if (result.RequiresTwoFactor)
+                //{
+                //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
+                //}
+                //if (result.IsLockedOut)
+                //{
+                //    _logger.LogWarning("User account locked out.");
+                //    return RedirectToAction(nameof(Lockout));
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                //    return View(model);
+                //}
             }
 
             // If we got this far, something failed, redisplay form
@@ -94,7 +93,7 @@ namespace Pharmacies.Web.Controllers
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signIn.GetTwoFactorAuthenticationUserAsync();
 
             if (user == null)
             {
@@ -117,7 +116,7 @@ namespace Pharmacies.Web.Controllers
                 return View(model);
             }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signIn.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -125,7 +124,7 @@ namespace Pharmacies.Web.Controllers
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result = await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
+            var result = await signIn.TwoFactorAuthenticatorSignInAsync(authenticatorCode, rememberMe, model.RememberMachine);
 
             if (result.Succeeded)
             {
@@ -150,7 +149,7 @@ namespace Pharmacies.Web.Controllers
         public async Task<IActionResult> LoginWithRecoveryCode(string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signIn.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
@@ -171,7 +170,7 @@ namespace Pharmacies.Web.Controllers
                 return View(model);
             }
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            var user = await signIn.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load two-factor authentication user.");
@@ -179,7 +178,7 @@ namespace Pharmacies.Web.Controllers
 
             var recoveryCode = model.RecoveryCode.Replace(" ", string.Empty);
 
-            var result = await _signInManager.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
+            var result = await signIn.TwoFactorRecoveryCodeSignInAsync(recoveryCode);
 
             if (result.Succeeded)
             {
@@ -222,21 +221,46 @@ namespace Pharmacies.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new PharmaciesUser { UserName = model.Email, Email = model.Email };
+                var user = new PharmaciesUser
+                {
+                    UserName = model.Username,
+                    Email = model.Email,
+                    Uin = model.Uin,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
+                string role = "User";
+                if (this.signIn.UserManager.Users.Count() == 1)
+                {
+                    role = "Admin";
+                }
+                var roleResult = this.signIn.UserManager.AddToRoleAsync(user, role).Result;
+                if (roleResult.Errors.Any())
+                {
+                    return this.View();
+                }
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
-
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation("User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    this.signIn.SignInAsync(user, false).Wait();
+                    return this.RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+
+                //var result = await _userManager.CreateAsync(user, model.Password);
+                //if (result.Succeeded)
+                //{
+                //    _logger.LogInformation("User created a new account with password.");
+
+                //    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                //    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                //    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                //    await _signInManager.SignInAsync(user, isPersistent: false);
+                //    _logger.LogInformation("User created a new account with password.");
+                //    return RedirectToLocal(returnUrl);
+                //}
+                //AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form
@@ -247,7 +271,7 @@ namespace Pharmacies.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            await signIn.SignOutAsync();
             _logger.LogInformation("User logged out.");
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -259,7 +283,7 @@ namespace Pharmacies.Web.Controllers
         {
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            var properties = signIn.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
 
@@ -272,14 +296,14 @@ namespace Pharmacies.Web.Controllers
                 ErrorMessage = $"Error from external provider: {remoteError}";
                 return RedirectToAction(nameof(Login));
             }
-            var info = await _signInManager.GetExternalLoginInfoAsync();
+            var info = await signIn.GetExternalLoginInfoAsync();
             if (info == null)
             {
                 return RedirectToAction(nameof(Login));
             }
 
             // Sign in the user with this external login provider if the user already has a login.
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var result = await signIn.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
@@ -307,7 +331,7 @@ namespace Pharmacies.Web.Controllers
             if (ModelState.IsValid)
             {
                 // Get the information about the user from the external login provider
-                var info = await _signInManager.GetExternalLoginInfoAsync();
+                var info = await signIn.GetExternalLoginInfoAsync();
                 if (info == null)
                 {
                     throw new ApplicationException("Error loading external login information during confirmation.");
@@ -319,7 +343,7 @@ namespace Pharmacies.Web.Controllers
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await signIn.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
                     }
