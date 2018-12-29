@@ -22,6 +22,7 @@ textarea {
 
 .Eventures-bg-color {
     background-color: #AFEEEE;
+    font-language-override:normal;
     color: dimgrey;
 }
 

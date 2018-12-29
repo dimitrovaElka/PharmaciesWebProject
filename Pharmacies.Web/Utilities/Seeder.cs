@@ -56,5 +56,35 @@ namespace Pharmacies.Web.Utilities
                 }
             }
         }
+
+        public async static Task SeedMedicaments(PharmaciesDbContext context)
+        {
+            if (!context.GenericMedicaments.Any())
+            {
+                var drugs = new List<DrugMedicament>();
+                drugs.Add(new DrugMedicament { TradeName = "Morphine Sulfate 10mg/ml Solution for Injection", Measure = "amp", PackingContent = "1" });
+                drugs.Add(new DrugMedicament { TradeName = "Morphine Sulfate 20mg/ml Solution for Injection", Measure = "amp", PackingContent = "1" });
+                var currentGeneric = new GenericMedicament { Name = "Morphine", Drugs = drugs };
+                await context.GenericMedicaments.AddAsync(currentGeneric);
+
+                var oxycontins = new List<DrugMedicament>();
+                oxycontins.Add(new DrugMedicament { TradeName = "OxyContin 10 mg", Measure = "tabl", PackingContent = "50" });
+                oxycontins.Add(new DrugMedicament { TradeName = "OxyContin 20 mg", Measure = "tabl", PackingContent = "50" });
+                oxycontins.Add(new DrugMedicament { TradeName = "OxyContin 40 mg", Measure = "tabl", PackingContent = "50" });
+                oxycontins.Add(new DrugMedicament { TradeName = "OxyContin 80 mg modified release tablets", Measure = "tabl", PackingContent = "50" });
+
+                var newGeneric = new GenericMedicament { Name = "Oxycodone", Drugs = oxycontins };
+                await context.GenericMedicaments.AddAsync(newGeneric);
+
+                try
+                {
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Something wrong in PharmaciesDbContext");
+                }
+            }
+        }
     }
 }

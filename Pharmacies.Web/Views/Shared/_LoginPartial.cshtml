@@ -1,4 +1,4 @@
-@using Microsoft.AspNetCore.Identity
+п»ї@using Microsoft.AspNetCore.Identity
 @using Pharmacies.Models
 
 @inject SignInManager<Pharmacies.Models.PharmaciesUser> SignInManager
@@ -9,10 +9,10 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Здравей @UserManager.GetUserName(User)!</a>
+                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Р—РґСЂР°РІРµР№ @UserManager.GetUserName(User)!</a>
             </li>
             <li>
-                <button type="submit" class="btn btn-link navbar-btn navbar-link">Изход</button>
+                <button type="submit" class="btn btn-link navbar-btn navbar-link">РР·С…РѕРґ</button>
             </li>
         </ul>
     </form>
@@ -22,15 +22,15 @@ else
     <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
         <ul class="navbar-nav right-side">
             <li class="nav-item">
-                <a asp-controller="Home" asp-action="Index" class="navbar-brand">Начало</a>
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand text-dark font-weight-bold">Home</a>
             </li>
         </ul>
         <ul class="navbar-nav left-side">
-            <li class="nav-item" lang="bg">
-                <a asp-controller="Account" asp-action="Register" class="navbar-brand text-dark font-weight-bold">Регистрация</a>
+            <li class="nav-item">
+                <a asp-controller="Account" asp-action="Register" class="navbar-brand text-dark font-weight-bold">Р РµРіРёСЃС‚СЂР°С†РёСЏ </a>
             </li>
             <li class="nav-item">
-                <a asp-controller="Account" asp-action="Login" class="navbar-brand text-dark font-weight-bold">Вход</a>
+                <a asp-controller="Account" asp-action="Login" class="navbar-brand text-dark font-weight-bold"> Р’С…РѕРґ</a>
             </li>
         </ul>
     </div>
