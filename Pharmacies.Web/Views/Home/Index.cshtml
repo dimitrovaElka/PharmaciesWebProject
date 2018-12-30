@@ -1,9 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@model Pharmacies.Web.Models.PharmaciesViewModels.AllPharmaciesViewModel
 
 @{
     ViewData["Title"] = "Home";
-    var currentUser = User.Identity.Name;
+    var currentUser = User;
 }
 @if (this.User.Identity.IsAuthenticated)
 {
@@ -11,7 +10,7 @@
     {
         <div class="container-fluid text-center" style="padding: 20px 30px 0 30px">
             <div class="jumbotron mt-3 Eventures-bg-color">
-                <h2 style="color: black">Greetings, Administrator - @currentUser!</h2>
+                <h2 style="color: black">Greetings, Administrator - @currentUser.Identity.Name!</h2>
                 <hr style="height: 3px; background-color:darkgrey" />
                 <p>
                     <h4 style="color: darkgrey">Enjoy your work.</h4>
@@ -22,14 +21,14 @@
     }
     else
     {
-        <div class="row justify-content-start" lang="bg">
+        @*<div class="row text-center" lang="bg">*@
             <partial name="/Views/Shared/_PharmaciesPartial.cshtml" />
-        </div>
+        @*</div>*@
     }
 }
 else
 {
-        <div class="row justify-content-start" lang="bg">
+        @*<div class="container-fluid text-center" lang="bg">*@
             <partial name="/Views/Shared/_PharmaciesPartial.cshtml" />
-        </div>
+        @*</div>*@
 }

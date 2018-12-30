@@ -22,9 +22,7 @@ namespace Pharmacies.Models
 
         public string Address { get; set; }
 
-        public PharmaciesUser Menager { get; set; }
-
-        public int PharmaciesUserId { get; set; }
+        public string Manager { get; set; }
 
         public string Telefon { get; set; }
 

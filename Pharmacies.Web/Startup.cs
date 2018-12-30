@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pharmacies.Data;
 using Pharmacies.Models;
+using Pharmacies.Web.Models.AccountViewModels;
 using Pharmacies.Web.Services;
 using Pharmacies.Web.Services.Contracts;
 using Pharmacies.Web.Utilities;
@@ -57,8 +60,18 @@ namespace Pharmacies.Web
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IPharmaciesService, PharmaciesService>();
+            services.AddTransient<IAccountsService, AccountsService>();
 
-            services.AddMvc();
+            services.AddAutoMapper(config =>
+            {
+                config.CreateMap<RegisterViewModel, PharmaciesUser>();
+            });
+
+            services.AddMvc(opt =>
+            {
+                opt.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,11 +92,12 @@ namespace Pharmacies.Web
 
             Seeder.SeedCities(dbContext).Wait();
 
-            app.UseStaticFiles();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

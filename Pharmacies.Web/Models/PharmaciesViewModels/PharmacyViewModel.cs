@@ -13,6 +13,6 @@ namespace Pharmacies.Web.Models.PharmaciesViewModels
 
         public string Address { get; set; }
 
-        public string Menager { get; set; }
+        public string Manager { get; set; }
     }
 }

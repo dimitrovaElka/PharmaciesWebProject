@@ -21,13 +21,12 @@ namespace Pharmacies.Web.Services
 
         public IQueryable<PharmacyViewModel> All() => this.dbContext.Pharmacies
             .Include(ph => ph.City)
-            .Include(a => a.Menager)
             .Select(a => new PharmacyViewModel
             {
                 Name = a.Name,
                 CityName = a.City.Name,
                 Address = a.Address,
-                Menager = a.Menager.LastName
+                Manager = a.Manager
             });
     }
 }

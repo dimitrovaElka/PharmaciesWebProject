@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pharmacies.Data;
 
 namespace Pharmacies.Data.Migrations
 {
     [DbContext(typeof(PharmaciesDbContext))]
-    partial class PharmaciesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181229152259_ModifyPharmaciesManager")]
+    partial class ModifyPharmaciesManager
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

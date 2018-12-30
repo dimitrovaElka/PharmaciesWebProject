@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Pharmacies.Models;
 using Pharmacies.Web.Models;
 using Pharmacies.Web.Models.PharmaciesViewModels;
 using Pharmacies.Web.Services.Contracts;
@@ -14,9 +16,12 @@ namespace Pharmacies.Web.Controllers
     {
         private readonly IPharmaciesService pharmaciesService;
 
-        public HomeController(IPharmaciesService pharmaciesService)
+        private readonly SignInManager<PharmaciesUser> signIn;
+
+        public HomeController(IPharmaciesService pharmaciesService, SignInManager<PharmaciesUser> signIn)
         {
             this.pharmaciesService = pharmaciesService;
+            this.signIn = signIn;
         }
 
         public IActionResult Index(AllPharmaciesViewModel model)

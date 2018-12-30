@@ -9,19 +9,19 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1 class="text-center">Login</h1>
+<h1 class="text-center">Въведете име и парола</h1>
 <hr class="hr-2 half-width" />
 <form class="mx-auto half-width" method="post" asp-controller="Account" asp-action="Login">
     <span asp-validation-summary="All" class="text-danger"></span>
     <div class="form-group">
-        <label asp-for="Username">Username</label>
-        <input asp-for="Username" class="form-control back-ground-yellow" placeholder="Username..." name="username">
+        <label asp-for="Username">Име на потребител</label>
+        <input asp-for="Username" class="form-control back-ground-yellow" placeholder="Име..." name="username">
         <span asp-validation-for="Username" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Password">Password</label>
-        <input asp-for="Password" class="form-control back-ground-yellow" placeholder="Password..." name="password">
-        <span asp-validation-for="Username" class="text-danger"></span>
+        <label asp-for="Password">Парола</label>
+        <input asp-for="Password" class="form-control back-ground-yellow" placeholder="Парола..." name="password">
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
     <div class="form-group">
         <hr class="hr-2" />
@@ -32,13 +32,13 @@
         <hr class="hr-2" />
     </div>
     <div class="button-holder d-flex justify-content-center">
-        <button type="submit" class="btn Eventures-bg-color">Login</button>
+        <button type="submit" class="btn Eventures-bg-color">Вход</button>
     </div>
     <div class="button-holder d-flex justify-content-center">
-        <h3><a href="" class="nav-link-dark">Forgot your password? </a></h3>
+        <h3><a href="" class="nav-link-dark">Забравена парола </a></h3>
     </div>
     <div class="button-holder d-flex justify-content-center">
-        <h3><a asp-controller="Account" asp-action="Register" class="nav-link-dark">Register as a new user</a></h3>
+        <h3><a asp-controller="Account" asp-action="Register" class="nav-link-dark">Регистрирайте се като нов потребител</a></h3>
     </div>
 
 </form>
